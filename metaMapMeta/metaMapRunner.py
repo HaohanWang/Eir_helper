@@ -1,5 +1,8 @@
 __author__ = 'Haohan Wang'
 
+import sys
+sys.path.append('../')
+
 from utility.paths import *
 from utility.pickleLoadSave import *
 
@@ -10,9 +13,9 @@ import os
 
 tmpPath = currentPath + 'metaMapMeta/'
 
-def loadData():
+def loadData(num):
     # data = np.load(dataPath + 'download_articles')
-    data = pickleLoad('../test/tmpAbstractFile')
+    data = pickleLoad(dataPath +' splitAbstracts'+str(num))
     return data
 
 def processedInputData(abstract):
@@ -53,8 +56,8 @@ def callMetaMap():
     # subprocess.check_output(command)
     os.system(' '.join(command))
 
-def run():
-    original_data = loadData()
+def run(num):
+    original_data = loadData(num)
 
     queriesCount = len(original_data)
     c = 0
@@ -62,14 +65,16 @@ def run():
         c += 1
         start = time.time()
         for k in original_data[a]:
-            processedInputData(k['abstract'])
-            callMetaMap()
-            seqs = processedOutputData()
-            k['metamap'] = seqs
+            if 'metamap' not in k:
+                processedInputData(k['abstract'])
+                callMetaMap()
+                seqs = processedOutputData()
+                k['metamap'] = seqs
         end = time.time()
         print '\nprocessed Query:', c, '/', queriesCount, '\t with ', len(original_data[a]), 'documents',
         print 'in ', end-start, 'seconds'
-        pickleSave('sampleFiles', original_data)
+        pickleSave('Result'+str(num), original_data)
 
 if __name__ == '__main__':
-    run()
+    num = int(sys.argv[1])
+    run(num)
