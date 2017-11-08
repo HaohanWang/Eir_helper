@@ -32,5 +32,15 @@ def splitData():
     pickleSave(dataPath+'splitAbstracts'+str(7), data_tmp)
     del data_tmp
 
+def mergeData():
+    data = {}
+    for i in range(7):
+        result = pickleLoad(dataPath + 'result/Result'+str(i))
+        for a in result:
+            data[a] = result[a]
+        del result
+
+    pickleSave(dataPath + 'allResults', data)
+
 if __name__ == '__main__':
-    splitData()
+    mergeData()
