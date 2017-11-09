@@ -15,7 +15,7 @@ tmpPath = currentPath + 'metaMapMeta/'
 
 def loadData(num):
     # data = np.load(dataPath + 'download_articles')
-    data = pickleLoad('Result'+str(num))
+    data = pickleLoad(dataPath + 'Result'+str(num))
     return data
 
 def loadFailCases(num):
@@ -87,7 +87,7 @@ def run(num):
         end = time.time()
         print '\nprocessed Query:', c, '/', queriesCount, '\t with ', len(original_data[a]), 'documents',
         print 'in ', end-start, 'seconds'
-        pickleSave('Result'+str(num), original_data)
+        pickleSave(dataPath + 'Result'+str(num), original_data)
 
 if __name__ == '__main__':
     num = int(sys.argv[1])
