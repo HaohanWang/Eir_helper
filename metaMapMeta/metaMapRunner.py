@@ -15,8 +15,16 @@ tmpPath = currentPath + 'metaMapMeta/'
 
 def loadData(num):
     # data = np.load(dataPath + 'download_articles')
-    data = pickleLoad(dataPath +' splitAbstracts'+str(num))
+    data = pickleLoad('Result'+str(num))
     return data
+
+def loadFailCases(num):
+    try:
+        ls = pickleLoad('failCase'+str(num))
+        return ls
+    except:
+        return []
+
 
 def processedInputData(abstract):
     f = open(tmpPath + 'tmp.txt', 'w')
@@ -58,18 +66,24 @@ def callMetaMap():
 
 def run(num):
     original_data = loadData(num)
+    failCase = loadFailCases(num)
 
     queriesCount = len(original_data)
     c = 0
     for a in original_data:
         c += 1
         start = time.time()
-        for k in original_data[a]:
-            if 'metamap' not in k:
-                processedInputData(k['abstract'])
-                callMetaMap()
-                seqs = processedOutputData()
-                k['metamap'] = seqs
+        if a not in failCase:
+            try:
+                for k in original_data[a]:
+                    if 'metamap' not in k:
+                        processedInputData(k['abstract'])
+                        callMetaMap()
+                        seqs = processedOutputData()
+                        k['metamap'] = seqs
+            except:
+                failCase.append(a)
+                pickleSave('failCase'+str(num), failCase)
         end = time.time()
         print '\nprocessed Query:', c, '/', queriesCount, '\t with ', len(original_data[a]), 'documents',
         print 'in ', end-start, 'seconds'
