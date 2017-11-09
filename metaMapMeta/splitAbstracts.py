@@ -34,7 +34,13 @@ def splitData():
 
 def mergeData():
     data = {}
-    for i in range(7):
+    # 0 EOF error
+    # 1 EOF error
+    # 2 insecure string pickle
+    # 4 EOF error
+    # 6 EOF error
+    # 7 EOF error
+    for i in [1]:
         result = pickleLoad(dataPath + 'result/Result'+str(i))
         for a in result:
             data[a] = result[a]
