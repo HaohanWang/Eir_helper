@@ -34,7 +34,6 @@ def loadTriedCases(num):
 
 def processedInputData(abstract, num):
     f = open(tmpPath + 'tmp'+str(num)+'.txt', 'w')
-    abstract = ''.join([i if ord(i) < 128 else ' ' for i in abstract])
     f.writelines(abstract.encode('utf-8')+'\n')
     f.close()
 
@@ -89,15 +88,18 @@ def run(num):
             try:
                 for k in original_data[a]:
                     if 'metamap' not in k:
-                        processedInputData(k['abstract'])
+                        abstract = k['abstract']
+                        abstract = ''.join([i if ord(i) < 128 else ' ' for i in abstract])
+                        processedInputData(abstract, num)
                         callMetaMap(num)
                         seqs = processedOutputData(num)
                         k['metamap'] = seqs
-                        print seqs
                         f1 = open(dataPath + 'textResult/result'+str(num), 'a')
-                        f1.writelines('\t'.join(a)+'\t')
-                        f1.writelines(k['abstract']+'\t')
-                        f1.writelines('\t'.join(seqs)+'\n')
+                        f1.writelines('----------------\n')
+                        f1.writelines('\t'.join(a)+'\n')
+                        f1.writelines(abstract+'\n')
+                        for m in seqs:
+                            f1.writelines(str(m[0])+'\t'+str(m[1])+'\t'+'\t'.join(m[2])+'\n')
                         f1.close()
             except:
                 pass
