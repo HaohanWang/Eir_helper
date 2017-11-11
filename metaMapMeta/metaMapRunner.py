@@ -32,8 +32,8 @@ def loadTriedCases(num):
         return []
 
 
-def processedInputData(abstract):
-    f = open(tmpPath + 'tmp.txt', 'w')
+def processedInputData(abstract, num):
+    f = open(tmpPath + 'tmp'+str(num)+'.txt', 'w')
     abstract = ''.join([i if ord(i) < 128 else ' ' for i in abstract])
     f.writelines(abstract.encode('utf-8')+'\n')
     f.close()
@@ -45,8 +45,8 @@ def find_nth(haystack, needle, n):
         n -= 1
     return start
 
-def processedOutputData():
-    text = [line.strip() for line in open('output.txt')]
+def processedOutputData(num):
+    text = [line.strip() for line in open('output'+str(num)+'.txt')]
     sequence = []
     for line in text:
         if line.startswith('mappings'):
@@ -63,9 +63,9 @@ def processedOutputData():
 
     return sequence
 
-def callMetaMap():
+def callMetaMap(num):
     mainCommand = metaMapPath+'bin/metamap16'
-    command = [mainCommand,'-q', '<', 'tmp.txt', '>', 'output.txt']
+    command = [mainCommand,'-q', '<', 'tmp'+str(num)+'.txt', '>', 'output'+str(num)+'.txt']
     # print command
     # subprocess.check_output(command)
     os.system(' '.join(command))
@@ -90,13 +90,14 @@ def run(num):
                 for k in original_data[a]:
                     if 'metamap' not in k:
                         processedInputData(k['abstract'])
-                        callMetaMap()
-                        seqs = processedOutputData()
+                        callMetaMap(num)
+                        seqs = processedOutputData(num)
                         k['metamap'] = seqs
+                        print seqs
                         f1 = open(dataPath + 'textResult/result'+str(num), 'a')
                         f1.writelines('\t'.join(a)+'\t')
                         f1.writelines(k['abstract']+'\t')
-                        f1.writelines('\t'.join(seqs))
+                        f1.writelines('\t'.join(seqs)+'\n')
                         f1.close()
             except:
                 pass
