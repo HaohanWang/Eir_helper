@@ -16,6 +16,7 @@ tmpPath = currentPath + 'metaMapMeta/'
 def loadData(num):
     # data = np.load(dataPath + 'download_articles')
     data = pickleLoad(dataPath + 'splitAbstracts'+str(num))
+    # data = pickleLoad(dataPath + 'Result'+str(num))
     return data
 
 def loadTriedCases(num):
