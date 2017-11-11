@@ -15,12 +15,17 @@ tmpPath = currentPath + 'metaMapMeta/'
 
 def loadData(num):
     # data = np.load(dataPath + 'download_articles')
-    data = pickleLoad('Result'+str(num))
+    data = pickleLoad(dataPath + 'splitAbstracts'+str(num))
     return data
 
-def loadFailCases(num):
+def loadTriedCases(num):
     try:
-        ls = pickleLoad('failCase'+str(num))
+        # ls = pickleLoad(dataPath+'triedCase/'+'triedCase'+str(num))
+        text = [line.strip() for line in open(dataPath+'triedCase/'+'triedCase'+str(num))]
+        ls = []
+        for line in text:
+            items = line.split('\t')
+            ls.append((items[0], items[1]))
         return ls
     except:
         return []
@@ -66,14 +71,20 @@ def callMetaMap():
 
 def run(num):
     original_data = loadData(num)
-    failCase = loadFailCases(num)
+    triedCase = loadTriedCases(num)
 
     queriesCount = len(original_data)
     c = 0
+    seqs_total = []
     for a in original_data:
         c += 1
         start = time.time()
-        if a not in failCase:
+        if a not in triedCase:
+            triedCase.append(a)
+            f2 = open(dataPath + 'triedCase/' + 'triedCase' + str(num), 'w')
+            for a in triedCase:
+                f2.writelines('\t'.join(a) + '\n')
+            f2.close()
             try:
                 for k in original_data[a]:
                     if 'metamap' not in k:
@@ -81,13 +92,17 @@ def run(num):
                         callMetaMap()
                         seqs = processedOutputData()
                         k['metamap'] = seqs
+                        f1 = open(dataPath + 'textResult/result'+str(num), 'a')
+                        f1.writelines('\t'.join(a)+'\t')
+                        f1.writelines(k['abstract']+'\t')
+                        f1.writelines('\t'.join(seqs))
+                        f1.close()
             except:
-                failCase.append(a)
-                pickleSave('failCase'+str(num), failCase)
+                pass
         end = time.time()
         print '\nprocessed Query:', c, '/', queriesCount, '\t with ', len(original_data[a]), 'documents',
         print 'in ', end-start, 'seconds'
-        pickleSave('Result'+str(num), original_data)
+        pickleSave(dataPath + 'result/'+'Result'+str(num), original_data)
 
 if __name__ == '__main__':
     num = int(sys.argv[1])
