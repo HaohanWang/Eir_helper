@@ -5,7 +5,7 @@ from utility.paths import *
 import numpy as np
 
 def loadData(num):
-    data = np.load(dataPath + 'download_articles')
+    data = np.load(dataPath + 'final_output')
     # data = pickleLoad('../test/splitAbstracts'+str(num))
     return data
 
@@ -48,5 +48,14 @@ def mergeData():
 
     pickleSave(dataPath + 'allResults', data)
 
+def testSplit(i):
+    abs = pickleLoad(dataPath+'splitAbstracts'+str(i))
+    for a in abs:
+        for t in abs[a]:
+            print t['PMID']
+            break
+        break
+
 if __name__ == '__main__':
-    mergeData()
+    # splitData()
+    testSplit(0)

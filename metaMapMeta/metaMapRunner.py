@@ -97,7 +97,7 @@ def run(num):
                         f1 = open(dataPath + 'textResult/result'+str(num), 'a')
                         f1.writelines('----------------\n')
                         f1.writelines('\t'.join(a)+'\n')
-                        f1.writelines(abstract+'\n')
+                        f1.writelines(k['PMID']+'\n')
                         for m in seqs:
                             f1.writelines(str(m[0])+'\t'+str(m[1])+'\t'+'\t'.join(m[2])+'\n')
                         f1.close()
